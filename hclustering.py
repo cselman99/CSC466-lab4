@@ -3,8 +3,7 @@ from collections import Counter
 
 import numpy as np
 import parse
-from calculations import centroid_distance, normalize
-import matplotlib.pyplot as plt
+from calculations import *
 import cProfile
 import pstats
 
@@ -127,8 +126,8 @@ if __name__ == "__main__":
         # data_norm = normalize(np.asarray(data, dtype=float))
 
         # final_clusters, T = h_clustering(data, 0.8)  # for iris
-        final_clusters, T = h_clustering(data, 12)  # for 4clusters
-
+        final_clusters, T = h_clustering(data, 4)  # for 4clusters
+        print(len(final_clusters))
         s = []
         buildDendrogram(T, s, 0)
         f = open("dendrogram.txt", "w")
@@ -136,28 +135,10 @@ if __name__ == "__main__":
         f.close()
 
         if gt_dict is not None:
-            for i, c in enumerate(final_clusters):
-                print(f'Cluster {i + 1}:')
-                results = []
-                for coords in c:
-                    results.append(gt_dict[tuple(coords)])
-                c = Counter(results)
-                common = c.most_common(1)[0]
-                accuracy = common[1] / len(results)
-                print(f'Most common element: {common[0]}')
-                print(f"Accuracy: {common[1]}/{len(results)} | {accuracy}")
-                print("-" * 30 + "\n")
+            print_accuracy(final_clusters, gt_dict)
 
-        # Only relevant for 2D datasets
-        colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
-        for i, c in enumerate(final_clusters):
-            x_coords = []
-            y_coords = []
-            for coords in c:
-                x_coords.append(coords[0])
-                y_coords.append(coords[1])
-            x_coords = np.asarray(x_coords)
-            y_coords = np.asarray(y_coords)
-            plt.scatter(x_coords, y_coords, color=colors[i % len(colors)])
-        # plt.show()
-        plt.savefig("out.png")
+        # For 2D datasets
+        graph2D('H Clustering at t = 6.5', "out2D.png", final_clusters)
+
+        # For 3D datasets
+        graph3D('H Clustering at t = 8', "out3D.png", final_clusters)

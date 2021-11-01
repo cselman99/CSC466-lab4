@@ -3,8 +3,8 @@ from collections import Counter
 import numpy as np
 import parse
 import sys
-from calculations import normalize, calc_centroid, distance, manhattan_distance
-import matplotlib.pyplot as plt
+from calculations import *
+
 
 
 def init_centroids(points, num_clusters):
@@ -126,28 +126,8 @@ if __name__ == "__main__":
         # data_norm = normalize(np.asarray(data, dtype=float))
         centroid_points = k_means(data, k, method, 0.1)
         if gt_dict is not None:
-            for i, c in enumerate(centroid_points.values()):
-                print(f'Cluster {i + 1}:')
-                results = []
-                for coords in c:
-                    results.append(gt_dict[tuple(coords)])
-                c = Counter(results)
-                common = c.most_common(1)[0]
-                accuracy = common[1] / len(results)
-                print(f'Most common element: {common[0]}')
-                print(f"Accuracy: {common[1]}/{len(results)} | {accuracy}")
-                print("-" * 30 + "\n")
+            print_accuracy(centroid_points.values(), gt_dict)
 
         # GRAPHING
-        colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
-        for i, c in enumerate(centroid_points.values()):
-            x_coords = []
-            y_coords = []
-            for coords in c:
-                x_coords.append(coords[0])
-                y_coords.append(coords[1])
-            x_coords = np.asarray(x_coords)
-            y_coords = np.asarray(y_coords)
-            plt.scatter(x_coords, y_coords, color=colors[i % len(colors)], s=10)
-        # plt.show()
-        plt.savefig("kmeans_graph.png")
+        graph2D('K-Means at k = 4', "out.png", centroid_points.values())
+
