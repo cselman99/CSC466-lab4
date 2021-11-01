@@ -1,38 +1,110 @@
 import numpy as np
 import parse
 import sys
-from calculations import distance, normalize
-
-def initialize_clusters(points, clusters):
-    pass
+from calculations import normalize, calc_centroid
+import matplotlib.pyplot as plt
 
 
-def k_means(points, clusters, stop_condition):
-    centroids = initialize_clusters(points, clusters)
-    centroid_points = {centroid: [] for centroid in centroids}
-    prev_centroids = centroids
+def distance(p1, p2):
+    dist = 0
+    for i in range(len(p1)):
+        dist += np.power(p1[i] - p2[i], 2)
+    return np.sqrt(dist)
 
+
+def init_centroids(points, num_clusters):
+    anchor = calc_centroid(points)
+    m1 = get_farthest_point(points, anchor)
+    m1 = tuple(m1)
+    centroids = [m1]
+    # Exactly 1 Cluster
+    if num_clusters == 1:
+        return centroids
+
+    m2 = get_farthest_point(points, m1)
+    m2 = tuple(m2)
+    centroids.append(m2)
+
+    # Exactly 2 Clusters
+    if num_clusters == 2:
+        return centroids
+
+    # More than 2 Clusters:
+    for i in range(2, num_clusters):
+        max_dist = None
+        max_point = None
+        for p in points:
+            running_distance = 0
+            for j in range(len(centroids)):
+                running_distance += distance(centroids[j], p)
+            if max_dist is None or running_distance > max_dist:
+                max_dist = running_distance
+                max_point = p
+        max_point = tuple(max_point)
+        centroids.append(max_point)
+    return centroids
+
+
+def get_farthest_point(points, anchor):
+    max_distance = None
+    max_point = None
+    for p in points:
+        dist = distance(anchor, p)
+        if max_distance is None or dist > max_distance:
+            max_point = p
+            max_distance = dist
+    return max_point
+
+
+def k_means(points, num_clusters, condition, threshold):
+    centroids = init_centroids(points, num_clusters)
+    stop_condition = False
+    centroid_points = None
     while not stop_condition:
+        # Re init centroid points for every iteration
+        centroid_points = {centroid: [] for centroid in centroids}
+
         for point in points:
             # get distance per centroid
             # get min distance
-            centroid_points[min_centroid(centroids, point)].append(point)
+            centroid_points[best_centroid(centroids, point)].append(point)
         # recompute centroids
-        centroids = get_new_centroids(centroids, centroid_points)
+        new_centroids = get_new_centroids(centroid_points)
         # get stoppage condition
-        stop_condition = calc_stop(centroids, prev_centroids)
+        stop_condition = calc_stop(centroids, new_centroids, condition, threshold)
 
-    return centroids
+    return centroid_points
 
-def calc_stop(centroids, prev_centroids):
-    pass
 
-def get_new_centroids(centroids, c_dict):
-    for k, v in c_dict.items():
+def get_new_centroids(centroid_points):
+    new_centroids = []
+    for points in centroid_points.values():
+        if len(points) == 0:
+            continue
+        cur_centroid = [0] * len(points[0])
+        for p in points:
+            for i in range(len(p)):
+                cur_centroid[i] += p[i]
+        cur_centroid = [c / len(points) for c in cur_centroid]
+        new_centroids.append(cur_centroid)
+    return new_centroids
+
+
+def calc_stop(centroids, prev_centroids, condition, threshold):
+    # True = Stop condition has been met
+    # False = Stop condition has not been met
+    if condition == "points":
         pass
+    elif condition == "centroids":
+        for i in range(len(centroids)):
+            if distance(centroids[i], prev_centroids[i]) < threshold:
+                return True
+    elif condition == "SSE":
+        pass
+    return True
 
 
-def min_centroid(centroids, point):
+def best_centroid(centroids, point):
     bestCentroid = None
     smallestDistance = None
     for centroid in centroids:
@@ -47,5 +119,21 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         filename = sys.argv[1]
         data = parse.parseData(filename)
-        data = normalize(np.asarray(data, dtype=float))
-        print(data)
+        data_norm = normalize(np.asarray(data, dtype=float))
+        # centroids = init_centroids(data, 3)
+        # print(centroids)
+        centroid_points = k_means(data, 3, "centroids", 5)
+
+        # GRAPHING
+        colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
+        for i, c in enumerate(centroid_points.values()):
+            x_coords = []
+            y_coords = []
+            for coords in c:
+                x_coords.append(coords[0])
+                y_coords.append(coords[1])
+            x_coords = np.asarray(x_coords)
+            y_coords = np.asarray(y_coords)
+            plt.scatter(x_coords, y_coords, color=colors[i % len(colors)])
+        # plt.show()
+        plt.savefig("kmeans_graph.png")
