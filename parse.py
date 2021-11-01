@@ -6,7 +6,7 @@ def parseData(input_file):
     lines = lines[1:]
     for line in lines:
         line = line.strip().replace("\"", "")
-        lineList = line.split(",")
+        lineList = [int(li) for li in line.split(",")]
         if len(lineList) > 1:
             new_lines = []
             for li in range(len(lineList)):

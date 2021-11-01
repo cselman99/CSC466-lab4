@@ -27,7 +27,10 @@ class Node:
 # complete link builds spheres
 
 def h_clustering(points, threshold):
-    clusters = [Node([p]) for p in points.tolist()]
+    if isinstance(points, list):
+        clusters = [Node([p]) for p in points]
+    else:
+        clusters = [Node([p]) for p in points.tolist()]
     distance_arr = np.zeros((len(clusters), len(clusters)), dtype=float)
     while len(distance_arr) > 1:
         min_dist = None
@@ -87,7 +90,7 @@ if __name__ == "__main__":
         data = parse.parseData(filename)
         data_norm = normalize(np.asarray(data, dtype=float))  # possible issue with normalization
 
-        final_clusters = h_clustering(data_norm, 1.4)
+        final_clusters = h_clustering(data_norm, 0.2)
         colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
         for i, c in enumerate(final_clusters):
             x_coords = []
