@@ -1,11 +1,16 @@
 import numpy as np
 
+
 def distance(p1, p2):
+    dist = 0
+    for i in range(len(p1)):
+        dist += np.power(p1[i] - p2[i], 2)
+    return np.sqrt(dist)
+
+
+def centroid_distance(p1, p2):
     p1_centroid = calc_centroid(p1)
     p2_centroid = calc_centroid(p2)
-    if len(p1_centroid) != len(p2_centroid):
-        print("Error: Varying point dimensions")
-        return None
     dist = 0
     for i in range(len(p1_centroid)):
         dist += np.power(p1_centroid[i] - p2_centroid[i], 2)
@@ -26,5 +31,5 @@ def calc_centroid(points):
     arr = [0] * pointLen
     for i in range(len(points)):
         for j in range(pointLen):
-            arr[j] += points[i][j]
-    return [a / len(points) for a in arr]
+            arr[j] += points[i][j] / len(points)
+    return arr

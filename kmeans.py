@@ -1,15 +1,8 @@
 import numpy as np
 import parse
 import sys
-from calculations import normalize, calc_centroid
+from calculations import normalize, calc_centroid, distance
 import matplotlib.pyplot as plt
-
-
-def distance(p1, p2):
-    dist = 0
-    for i in range(len(p1)):
-        dist += np.power(p1[i] - p2[i], 2)
-    return np.sqrt(dist)
 
 
 def init_centroids(points, num_clusters):
@@ -116,13 +109,17 @@ def best_centroid(centroids, point):
     return bestCentroid
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
+    if len(sys.argv) >= 3:
+        method = "centroids"  # default method to centroids
+        if len(sys.argv) > 3:
+            method = sys.argv[3]
         filename = sys.argv[1]
+        k = int(sys.argv[2])
         data = parse.parseData(filename)
         data_norm = normalize(np.asarray(data, dtype=float))
         # centroids = init_centroids(data, 3)
         # print(centroids)
-        centroid_points = k_means(data, 3, "centroids", 5)
+        centroid_points = k_means(data, k, method, 0.1)
 
         # GRAPHING
         colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
@@ -134,6 +131,6 @@ if __name__ == "__main__":
                 y_coords.append(coords[1])
             x_coords = np.asarray(x_coords)
             y_coords = np.asarray(y_coords)
-            plt.scatter(x_coords, y_coords, color=colors[i % len(colors)])
+            plt.scatter(x_coords, y_coords, color=colors[i % len(colors)], s=10)
         # plt.show()
         plt.savefig("kmeans_graph.png")
