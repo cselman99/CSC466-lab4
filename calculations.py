@@ -51,8 +51,38 @@ def get_stats(centroid_dict):
     # 2. Coordinates of its centroid.
     # 3. Maximum, minimum, and the average distance from a point to cluster centroid.
     # 4. Sum of Squared Errors (SSE) for the points in the cluster.
+    k = 1
+    for centroid, points in centroid_dict.items():
+        min_distance = None
+        max_distance = None
+        avg_distance = 0
+        dist = [0] * len(points)
+        for i, p in enumerate(points):
+            dist[i] = distance(centroid, p)
+            if dist[i] == 0:
+                continue
+            if min_distance is None or dist[i] < min_distance:
+                min_distance = dist[i]
+            if max_distance is None or dist[i] > max_distance:
+                max_distance = dist[i]
+            avg_distance += dist[i]
+        avg_distance /= len(points)
+        print('-' * 36)
+        print(f'Cluster {k}: {centroid}')
+        print(f'Number of Points: {len(points)}')
+        print(f'Minimum distance: {min_distance}')
+        print(f'Maximum distance: {max_distance}')
+        print(f'Average distance: {avg_distance}')
+        print(f'SSE: {compute_SSE(dist, avg_distance)}\n')
+        k += 1
     pass
 
+
+def compute_SSE(point_distances, avg):
+    sse = 0
+    for p in point_distances:
+        sse += pow((p - avg), 2)
+    return sse
 
 
 

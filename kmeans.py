@@ -69,6 +69,7 @@ def k_means(points, num_clusters, condition, threshold):
         # get stoppage condition
         stop_condition = calc_stop(centroids, new_centroids, condition, threshold)
 
+    get_stats(centroid_points)
     return centroid_points
 
 
