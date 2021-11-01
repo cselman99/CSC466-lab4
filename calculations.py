@@ -1,6 +1,13 @@
 import numpy as np
 
 
+def manhattan_distance(p1, p2):
+    dist = 0
+    for i in range(len(p1)):
+        dist += np.abs(p1[i] - p2[i])
+    return dist
+
+
 def distance(p1, p2):
     dist = 0
     for i in range(len(p1)):
@@ -33,3 +40,13 @@ def calc_centroid(points):
         for j in range(pointLen):
             arr[j] += points[i][j] / len(points)
     return arr
+
+
+def get_stats(centroid_dict):
+    # For each cluster, compute and report:
+    # 1. Number of points in the cluster.
+    # 2. Coordinates of its centroid.
+    # 3. Maximum, minimum, and the average distance from a point to cluster centroid.
+    # 4. Sum of Squared Errors (SSE) for the points in the cluster.
+    pass
+

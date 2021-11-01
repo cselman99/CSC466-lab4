@@ -1,7 +1,9 @@
+from collections import Counter
+
 import numpy as np
 import parse
 import sys
-from calculations import normalize, calc_centroid, distance
+from calculations import normalize, calc_centroid, distance, manhattan_distance
 import matplotlib.pyplot as plt
 
 
@@ -30,7 +32,7 @@ def init_centroids(points, num_clusters):
             running_distance = 0
             for j in range(len(centroids)):
                 running_distance += distance(centroids[j], p)
-            if max_dist is None or running_distance > max_dist:
+            if (max_dist is None or running_distance > max_dist) and tuple(p) not in centroids:
                 max_dist = running_distance
                 max_point = p
         max_point = tuple(max_point)
@@ -56,6 +58,7 @@ def k_means(points, num_clusters, condition, threshold):
     while not stop_condition:
         # Re init centroid points for every iteration
         centroid_points = {centroid: [] for centroid in centroids}
+
 
         for point in points:
             # get distance per centroid
@@ -115,11 +118,25 @@ if __name__ == "__main__":
             method = sys.argv[3]
         filename = sys.argv[1]
         k = int(sys.argv[2])
-        data = parse.parseData(filename)
-        data_norm = normalize(np.asarray(data, dtype=float))
-        # centroids = init_centroids(data, 3)
-        # print(centroids)
+        if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
+            data, gt_dict = parse.parseGTData(filename)
+        else:
+            data = parse.parseData(filename)
+            gt_dict = None
+        # data_norm = normalize(np.asarray(data, dtype=float))
         centroid_points = k_means(data, k, method, 0.1)
+        if gt_dict is not None:
+            for i, c in enumerate(centroid_points.values()):
+                print(f'Cluster {i + 1}:')
+                results = []
+                for coords in c:
+                    results.append(gt_dict[tuple(coords)])
+                c = Counter(results)
+                common = c.most_common(1)[0]
+                accuracy = common[1] / len(results)
+                print(f'Most common element: {common[0]}')
+                print(f"Accuracy: {common[1]}/{len(results)} | {accuracy}")
+                print("-" * 30 + "\n")
 
         # GRAPHING
         colors = ["red","green","blue","yellow","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
