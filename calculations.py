@@ -27,6 +27,28 @@ def centroid_distance(p1, p2):
     return np.sqrt(dist)
 
 
+def average_linking(p1, p2):
+    dist = 0
+    for x in p1:
+        for y in p2:
+            dist += distance(x, y)
+            # dist += manhattan_distance(x, y)
+    return dist / (len(p1) * len(p2))
+
+def single_link(p1, p2):
+    min_dist = None
+    min_x = None
+    min_y = None
+    for x in p1:
+        for y in p2:
+            cur_dist = distance(x, y)
+            if min_dist is None or min_dist > cur_dist:
+                min_dist = cur_dist
+                min_x = x
+                min_y = y
+    return distance(min_x, min_y)
+
+
 def normalize(data):
     mins = np.min(data, axis=0)
     maxs = np.max(data, axis=0)
@@ -129,7 +151,7 @@ def graph3D(title, filedest, points):
         x_coords = np.asarray(x_coords)
         y_coords = np.asarray(y_coords)
         z_coords = np.asarray(z_coords)
-        plt.scatter(x_coords, y_coords, z_coords, color=colors[i % len(colors)])
+        ax.scatter(x_coords, y_coords, z_coords, color=colors[i % len(colors)], s=20)
 
 
     ax.set_xlabel('X')

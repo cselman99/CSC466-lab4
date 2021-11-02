@@ -46,8 +46,12 @@ def h_clustering(points, threshold):
                 if i == j:
                     continue
                 # Only calculate distance if dist_arr value has not been previously calculated
-                distance_arr[i, j] = centroid_distance(clusters[i].value, clusters[j].value) \
+                # distance_arr[i, j] = centroid_distance(clusters[i].value, clusters[j].value) \
+                #     if distance_arr[i, j] == 0 else distance_arr[i, j]
+                distance_arr[i, j] = average_linking(clusters[i].value, clusters[j].value) \
                     if distance_arr[i, j] == 0 else distance_arr[i, j]
+                # distance_arr[i, j] = single_link(clusters[i].value, clusters[j].value) \
+                #     if distance_arr[i, j] == 0 else distance_arr[i , j]
                 cur_dist = distance_arr[i, j]
                 if min_dist is None or cur_dist < min_dist:
                     min_dist = cur_dist
@@ -126,8 +130,7 @@ if __name__ == "__main__":
         # data_norm = normalize(np.asarray(data, dtype=float))
 
         # final_clusters, T = h_clustering(data, 0.8)  # for iris
-        final_clusters, T = h_clustering(data, 4)  # for 4clusters
-        print(len(final_clusters))
+        final_clusters, T = h_clustering(data, 1)  # for 4clusters
         s = []
         buildDendrogram(T, s, 0)
         f = open("dendrogram.txt", "w")
@@ -138,7 +141,7 @@ if __name__ == "__main__":
             print_accuracy(final_clusters, gt_dict)
 
         # For 2D datasets
-        graph2D('H Clustering at t = 6.5', "out2D.png", final_clusters)
+        # graph2D('H Clustering at t = 6.5', "out2D.png", final_clusters)
 
         # For 3D datasets
-        graph3D('H Clustering at t = 8', "out3D.png", final_clusters)
+        graph3D('H Clustering at t = 1', "out3D.png", final_clusters)

@@ -59,7 +59,6 @@ def k_means(points, num_clusters, condition, threshold):
         # Re init centroid points for every iteration
         centroid_points = {centroid: [] for centroid in centroids}
 
-
         for point in points:
             # get distance per centroid
             # get min distance
@@ -68,6 +67,8 @@ def k_means(points, num_clusters, condition, threshold):
         new_centroids = get_new_centroids(centroid_points)
         # get stoppage condition
         stop_condition = calc_stop(centroids, new_centroids, condition, threshold)
+        # Update centroids
+        centroids = new_centroids
 
     get_stats(centroid_points)
     return centroid_points
@@ -81,9 +82,9 @@ def get_new_centroids(centroid_points):
         cur_centroid = [0] * len(points[0])
         for p in points:
             for i in range(len(p)):
-                cur_centroid[i] += p[i]
-        cur_centroid = [c / len(points) for c in cur_centroid]
-        new_centroids.append(cur_centroid)
+                cur_centroid[i] += p[i] / len(points)
+        # cur_centroid = [c / len(points) for c in cur_centroid]
+        new_centroids.append(tuple(cur_centroid))
     return new_centroids
 
 
@@ -93,12 +94,15 @@ def calc_stop(centroids, prev_centroids, condition, threshold):
     if condition == "points":
         pass
     elif condition == "centroids":
+        dist = 0
         for i in range(len(centroids)):
-            if distance(centroids[i], prev_centroids[i]) < threshold:
-                return True
+            cur_dist = distance(centroids[i], prev_centroids[i])
+            dist += cur_dist
+        if dist < threshold:
+            return True
     elif condition == "SSE":
         pass
-    return True
+    return False
 
 
 def best_centroid(centroids, point):
@@ -125,10 +129,11 @@ if __name__ == "__main__":
             data = parse.parseData(filename)
             gt_dict = None
         # data_norm = normalize(np.asarray(data, dtype=float))
-        centroid_points = k_means(data, k, method, 0.1)
+        centroid_points = k_means(data, k, method, 1)
         if gt_dict is not None:
             print_accuracy(centroid_points.values(), gt_dict)
 
         # GRAPHING
-        graph2D('K-Means at k = 4', "out.png", centroid_points.values())
+        # graph2D('K-Means at k = 4', "out.png", centroid_points.values())
 
+        graph3D('K-Means at k = 4', "out.png", centroid_points.values())
