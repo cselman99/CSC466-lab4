@@ -1,10 +1,6 @@
-from collections import Counter
-
-import numpy as np
-import parse
+from parse import read_data
 import sys
-from calculations import *
-
+from calculations import calc_centroid, distance, get_stats, graph, print_accuracy
 
 
 def init_centroids(points, num_clusters):
@@ -116,6 +112,7 @@ def best_centroid(centroids, point):
 
     return bestCentroid
 
+
 if __name__ == "__main__":
     if len(sys.argv) >= 3:
         method = "centroids"  # default method to centroids
@@ -123,17 +120,10 @@ if __name__ == "__main__":
             method = sys.argv[3]
         filename = sys.argv[1]
         k = int(sys.argv[2])
-        if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
-            data, gt_dict = parse.parseGTData(filename)
-        else:
-            data = parse.parseData(filename)
-            gt_dict = None
+        data, gt_dict, data_type = read_data(filename)
         # data_norm = normalize(np.asarray(data, dtype=float))
         centroid_points = k_means(data, k, method, 1)
         if gt_dict is not None:
             print_accuracy(centroid_points.values(), gt_dict)
 
-        # GRAPHING
-        # graph2D('K-Means at k = 4', "out.png", centroid_points.values())
-
-        graph3D('K-Means at k = 4', "out.png", centroid_points.values())
+        graph('K-Means at k = 4', "out.png", centroid_points.values(), data_type)

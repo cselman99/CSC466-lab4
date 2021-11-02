@@ -1,11 +1,8 @@
 import sys
-from collections import Counter
 
 import numpy as np
-import parse
-from calculations import *
-import cProfile
-import pstats
+from parse import read_data
+from calculations import graph, print_accuracy, average_linking
 
 
 class Node:
@@ -23,11 +20,6 @@ class Node:
     def __repr__(self):
         return str(self.value) + " dist: " + str(self.dist) + " " + str(self.child1) + " , " + str(self.child2)
 
-
-
-# should use average link in most cases
-# single link extends in weird directions
-# complete link builds spheres
 
 def h_clustering(points, threshold):
     if isinstance(points, list):
@@ -90,26 +82,25 @@ def get_threshold_nodes(root, threshold, final_list):
     return
 
 
-def buildDendrogram(T, s, spaces):
-    if T is None:
+def build_dendrogram(tree, string, spaces):
+    if tree is None:
         return
-    elif T.dist == 0:  # Found a leaf node
-        new_t = [str(element) for element in T.value[0]]
+    elif tree.dist == 0:  # Found a leaf node
+        new_t = [str(element) for element in tree.value[0]]
         data = ",".join(new_t)
         content = "\t" * spaces + f"<leaf height= \"0\" data =\"{data}\"/>\n"
-        s.append(content)
+        string.append(content)
     elif spaces == 0:  # We are on the first iteration (root node)
-        s.append(f"<tree height = \"{T.dist}\">\n")
-        buildDendrogram(T.child1, s, spaces + 1)  # Traverse right
-        buildDendrogram(T.child2, s, spaces + 1)  # Traverse left
-        s.append("</tree>\n")
+        string.append(f"<tree height = \"{tree.dist}\">\n")
+        build_dendrogram(tree.child1, string, spaces + 1)  # Traverse right
+        build_dendrogram(tree.child2, string, spaces + 1)  # Traverse left
+        string.append("</tree>\n")
     else:
-        content = "\t" * spaces + f"<node height = \"{T.dist}\">\n"
-        s.append(content)
-        buildDendrogram(T.child1, s, spaces + 1)  # Traverse right
-        buildDendrogram(T.child2, s, spaces + 1)  # Traverse left
-        s.append("\t" * spaces + "</node>\n")
-    return
+        content = "\t" * spaces + f"<node height = \"{tree.dist}\">\n"
+        string.append(content)
+        build_dendrogram(tree.child1, string, spaces + 1)  # Traverse right
+        build_dendrogram(tree.child2, string, spaces + 1)  # Traverse left
+        string.append("\t" * spaces + "</node>\n")
 
 
 # profile = cProfile.Profile()
@@ -121,18 +112,13 @@ def buildDendrogram(T, s, spaces):
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         filename = sys.argv[1]
-        if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
-            data, gt_dict = parse.parseGTData(filename)
-            print(gt_dict)
-        else:
-            data = parse.parseData(filename)
-            gt_dict = None
+        data, gt_dict, data_type = read_data(filename)
         # data_norm = normalize(np.asarray(data, dtype=float))
 
         # final_clusters, T = h_clustering(data, 0.8)  # for iris
         final_clusters, T = h_clustering(data, 1)  # for 4clusters
         s = []
-        buildDendrogram(T, s, 0)
+        build_dendrogram(T, s, 0)
         f = open("dendrogram.txt", "w")
         f.writelines(s)
         f.close()
@@ -140,8 +126,4 @@ if __name__ == "__main__":
         if gt_dict is not None:
             print_accuracy(final_clusters, gt_dict)
 
-        # For 2D datasets
-        # graph2D('H Clustering at t = 6.5', "out2D.png", final_clusters)
-
-        # For 3D datasets
-        graph3D('H Clustering at t = 1', "out3D.png", final_clusters)
+        graph('H Clustering at t = 6.5', "out2D.png", final_clusters, data_type)
