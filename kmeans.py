@@ -50,7 +50,7 @@ def get_farthest_point(points, anchor):
 def k_means(points, num_clusters, condition, threshold):
     centroids = init_centroids(points, num_clusters)
     stop_condition = False
-    centroid_points = None
+    centroid_points = old_points = None
     while not stop_condition:
         # Re init centroid points for every iteration
         centroid_points = {centroid: [] for centroid in centroids}
@@ -62,9 +62,10 @@ def k_means(points, num_clusters, condition, threshold):
         # recompute centroids
         new_centroids = get_new_centroids(centroid_points)
         # get stoppage condition
-        stop_condition = calc_stop(centroids, new_centroids, condition, threshold)
+        stop_condition = calc_stop(centroids, new_centroids, centroid_points, old_points, condition, threshold)
         # Update centroids
         centroids = new_centroids
+        old_points = centroid_points.copy()
 
     get_stats(centroid_points)
     return centroid_points
@@ -84,11 +85,25 @@ def get_new_centroids(centroid_points):
     return new_centroids
 
 
-def calc_stop(centroids, prev_centroids, condition, threshold):
+def calc_stop(prev_centroids, centroids, centroid_points, old_points, condition, threshold):
     # True = Stop condition has been met
     # False = Stop condition has not been met
     if condition == "points":
-        pass
+        if old_points is None:
+            return False
+        centroid_points_keys = list(centroid_points.keys())
+        old_points_keys = list(old_points.keys())
+        conflicts = 0
+        for i, key in enumerate(centroid_points_keys):
+            if len(centroid_points[key]) != len(old_points[old_points_keys[i]]):
+                return False
+            temp_1 = sorted(centroid_points[key], key=lambda x: x[0])
+            temp_2 = sorted(old_points[old_points_keys[i]], key=lambda x: x[0])
+            for j, point in enumerate(temp_1):
+                if point != temp_2[j]:
+                    conflicts += 1
+        if conflicts <= threshold:
+            return True
     elif condition == "centroids":
         dist = 0
         for i in range(len(centroids)):
@@ -97,7 +112,13 @@ def calc_stop(centroids, prev_centroids, condition, threshold):
         if dist < threshold:
             return True
     elif condition == "SSE":
-        pass
+        sse = old_sse = 0
+        for i in range(len(prev_centroids)):
+            for point in centroid_points[prev_centroids[i]]:
+                sse += distance(centroids[i], point)
+                old_sse += distance(prev_centroids[i], point)
+        if old_sse - sse < threshold:
+            return True
     return False
 
 
