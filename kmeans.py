@@ -47,7 +47,7 @@ def get_farthest_point(points, anchor):
     return max_point
 
 
-def k_means(points, num_clusters, condition, threshold):
+def k_means(points, num_clusters, condition, threshold, verbose=False):
     centroids = init_centroids(points, num_clusters)
     stop_condition = False
     centroid_points = old_points = None
@@ -67,7 +67,8 @@ def k_means(points, num_clusters, condition, threshold):
         centroids = new_centroids
         old_points = centroid_points.copy()
 
-    get_stats(centroid_points)
+    if verbose:
+        get_stats(centroid_points)
     return centroid_points
 
 
@@ -141,10 +142,17 @@ if __name__ == "__main__":
             method = sys.argv[3]
         filename = sys.argv[1]
         k = int(sys.argv[2])
-        data, gt_dict, data_type = read_data(filename)
-        # data_norm = normalize(np.asarray(data, dtype=float))
-        centroid_points = k_means(data, k, method, 1)
-        if gt_dict is not None:
+        data, gt_dict, data_type = read_data(filename, norm=True)
+        centroid_points = k_means(data, k, method, 1, verbose="mammal_milk" not in filename)
+
+        if "mammal_milk" in filename:
+            for i, centroid in enumerate(centroid_points.keys()):
+                print("------------------------------------")
+                print("Cluster %d" % (i + 1))
+                for animal in centroid_points[centroid]:
+                    print(gt_dict[tuple(animal)])
+                print()
+        elif gt_dict is not None:
             print_accuracy(centroid_points.values(), gt_dict)
 
         graph('K-Means at k = 4', "out.png", centroid_points.values(), data_type)

@@ -88,12 +88,12 @@ if __name__ == "__main__":
     # .01, 3 for ring
     # .78, 2 for iris (not good between virginica and versicolor)
     # 1.75, 2 for mammal milk
-    epsilon = 2
-    density = 2
 
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 4:
         filename = sys.argv[1]
-        data, gt_dict, data_type = read_data(filename)
+        epsilon = float(sys.argv[2])
+        density = int(sys.argv[3])
+        data, gt_dict, data_type = read_data(filename, norm=False)
 
         df = pd.DataFrame(data, columns=[i for i in range(len(data[0]))])
 
@@ -112,8 +112,15 @@ if __name__ == "__main__":
                 groups[ps[p].label] = []
                 temp[ps[p].label] = []
             groups[ps[p].label].append(ps[p].info.values)
-            temp[ps[p].label].append(gt_dict[tuple(ps[p].info.values)])
-        print(temp.keys())
-        print(temp)
+            if gt_dict is not None:
+                temp[ps[p].label].append(gt_dict[tuple(ps[p].info.values)])
+
+        if "mammal_milk" in filename:
+            for i, key in enumerate(list(temp.keys())):
+                print("------------------------------------")
+                print("Cluster %d" % (i + 1))
+                for animal in temp[key]:
+                    print(animal)
+                print()
 
         graph("DBSCAN at e=2 and # points=2", "", [groups[key] for key in groups.keys()], data_type)

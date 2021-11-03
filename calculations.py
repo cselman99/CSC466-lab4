@@ -2,7 +2,7 @@ import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
 
-colors = ["red", "green", "blue", "pink", "black", "orange", "purple", "beige", "brown", "gray", "cyan", "magenta"]
+colors = ["red", "green", "blue", "pink", "black", "orange", "purple", "beige", "brown", "gray", "cyan", "magenta", "lavender", "lime", "aquamarine", "tan", "silver", "cornsilk", "lightsalmon"]
 
 
 def manhattan_distance(p1, p2):

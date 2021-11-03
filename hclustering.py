@@ -110,20 +110,30 @@ def build_dendrogram(tree, string, spaces):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
+    if len(sys.argv) >= 2:
+        threshold = 1
+        if len(sys.argv) == 3:
+            threshold = float(sys.argv[2])
+
         filename = sys.argv[1]
         data, gt_dict, data_type = read_data(filename)
-        # data_norm = normalize(np.asarray(data, dtype=float))
 
-        # final_clusters, T = h_clustering(data, 0.8)  # for iris
-        final_clusters, T = h_clustering(data, 1)  # for 4clusters
+        # final_clusters, tree = h_clustering(data, 0.8)  # for iris
+        final_clusters, tree = h_clustering(data, threshold)  # for 4clusters
         s = []
-        build_dendrogram(T, s, 0)
+        build_dendrogram(tree, s, 0)
         f = open("dendrogram.txt", "w")
         f.writelines(s)
         f.close()
 
-        if gt_dict is not None:
+        if "mammal_milk" in filename:
+            for i, cluster in enumerate(final_clusters):
+                print("------------------------------------")
+                print("Cluster %d" % (i + 1))
+                for animal in cluster:
+                    print(gt_dict[tuple(animal)])
+                print()
+        elif gt_dict is not None:
             print_accuracy(final_clusters, gt_dict)
 
         graph('H Clustering at t = 6.5', "out2D.png", final_clusters, data_type)

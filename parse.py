@@ -1,25 +1,29 @@
-def parseData(input_file):
+import numpy as np
+from calculations import normalize
+
+
+def parse_data(input_file):
     file = open(input_file, "r")
     lines = file.readlines()
     restrictions = [int(li.strip()) for li in lines[0].split(",")]
     lines = lines[1:]
-    lineList = []
+    line_list = []
     for line in lines:
         line = line.strip().replace("\"", "")
-        lineList.append([float(li) for i, li in enumerate(line.split(",")) if len(li) > 0 and restrictions[i] == 1])
-    return lineList
+        line_list.append([float(li) for i, li in enumerate(line.split(",")) if len(li) > 0 and restrictions[i] == 1])
+    return line_list
 
 
-def parseGTData(input_file):
+def parse_gt_data(input_file):
     file = open(input_file, "r")
     lines = file.readlines()
     d = []
     restrictions = [int(li.strip()) for li in lines[0].split(",")]
     lines = lines[1:]
-    iris_dict = {}
+    temp_dict = {}
     for line in lines:
         line = line.strip().replace("\"", "")
-        lineList = []
+        line_list = []
         cat = None
         for i, li in enumerate(line.split(",")):
             if len(li) == 0:
@@ -27,19 +31,30 @@ def parseGTData(input_file):
             if restrictions[i] == 0:
                 cat = li
             elif restrictions[i] == 1:
-                lineList.append(float(li))
-        if len(lineList) > 1:
-            iris_dict[tuple(lineList)] = cat
-            d += [lineList]
-    return d, iris_dict
+                line_list.append(float(li))
+        if len(line_list) > 1:
+            temp_dict[tuple(line_list)] = cat
+            d += [line_list]
+    return d, temp_dict
 
 
-def read_data(filename):
+def read_data(filename, norm=True):
     if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
-        data, gt_dict = parseGTData(filename)
+        data, gt_dict = parse_gt_data(filename)
     else:
-        data = parseData(filename)
+        data = parse_data(filename)
         gt_dict = None
+
+    if norm:
+        temp = np.array(data).T
+        temp = np.array([normalize(arr) for arr in temp]).T
+        data = [arr.tolist() for arr in temp]
+        if gt_dict is not None:
+            new_dict = {}
+            gt_dict_values = list(gt_dict.values())
+            for i, value in enumerate(data):
+                new_dict[tuple(value)] = gt_dict_values[i]
+            gt_dict = new_dict.copy()
 
     data_type = None
     if len(data[0]) == 2:
