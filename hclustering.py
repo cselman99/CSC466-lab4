@@ -2,7 +2,7 @@ import sys
 
 import numpy as np
 from parse import read_data
-from calculations import graph, print_accuracy, average_linking
+from calculations import graph, print_accuracy, average_linking, find_cluster_sse
 
 
 class Node:
@@ -136,4 +136,6 @@ if __name__ == "__main__":
         elif gt_dict is not None:
             print_accuracy(final_clusters, gt_dict)
 
-        graph('H Clustering at t = 6.5', "out2D.png", final_clusters, data_type)
+        if data_type is not None:
+            graph('H Clustering at t = 6.5', "out2D.png", final_clusters, data_type)
+        find_cluster_sse({i: final_clusters[i] for i in range(len(final_clusters))})

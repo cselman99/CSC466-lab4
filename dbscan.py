@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 from parse import read_data
-from calculations import graph
+from calculations import graph, find_cluster_sse
 
 
 class Point:
@@ -122,5 +122,6 @@ if __name__ == "__main__":
                 for animal in temp[key]:
                     print(animal)
                 print()
-
-        graph("DBSCAN at e=2 and # points=2", "", [groups[key] for key in groups.keys()], data_type)
+        elif data_type is not None:
+            graph("DBSCAN at e=2 and # points=2", "", [groups[key] for key in groups.keys()], data_type)
+        find_cluster_sse(groups)

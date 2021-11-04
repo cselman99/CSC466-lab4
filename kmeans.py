@@ -1,6 +1,6 @@
 from parse import read_data
 import sys
-from calculations import calc_centroid, distance, get_stats, graph, print_accuracy
+from calculations import calc_centroid, distance, get_stats, graph, print_accuracy, find_cluster_sse
 
 
 def init_centroids(points, num_clusters):
@@ -142,7 +142,7 @@ if __name__ == "__main__":
             method = sys.argv[3]
         filename = sys.argv[1]
         k = int(sys.argv[2])
-        data, gt_dict, data_type = read_data(filename, norm=True)
+        data, gt_dict, data_type = read_data(filename, norm=False)
         centroid_points = k_means(data, k, method, 1, verbose="mammal_milk" not in filename)
 
         if "mammal_milk" in filename:
@@ -152,7 +152,10 @@ if __name__ == "__main__":
                 for animal in centroid_points[centroid]:
                     print(gt_dict[tuple(animal)])
                 print()
+        elif data_type is not None:
+            graph('K-Means at k = 4', "out.png", centroid_points.values(), data_type)
+            if gt_dict is not None:
+                print_accuracy(centroid_points.values(), gt_dict)
         elif gt_dict is not None:
             print_accuracy(centroid_points.values(), gt_dict)
-
-        graph('K-Means at k = 4', "out.png", centroid_points.values(), data_type)
+        find_cluster_sse(centroid_points)

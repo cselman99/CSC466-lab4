@@ -169,3 +169,16 @@ def graph(title, filedest, points, data_type):
     if data_type == "3D":
         graph3D(title, filedest, points)
 
+
+def find_cluster_sse(groups):
+    print(len(list(groups.keys())))
+    outliers = points = total_sse = 0
+    for key in groups.keys():
+        if len(groups[key]) == 1:
+            outliers += 1
+        else:
+            centroid = calc_centroid(groups[key])
+            total_sse += compute_SSE([np.array(l) for l in groups[key]], np.array(centroid)).sum()
+            points += len(groups[key])
+    total_sse += outliers * 1.96 * total_sse / points
+    print("Total SSE: %.3f" % total_sse)

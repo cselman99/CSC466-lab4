@@ -38,7 +38,7 @@ def parse_gt_data(input_file):
     return d, temp_dict
 
 
-def read_data(filename, norm=True):
+def read_data(filename, norm=False):
     if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
         data, gt_dict = parse_gt_data(filename)
     else:
