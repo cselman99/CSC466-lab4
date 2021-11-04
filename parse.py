@@ -48,13 +48,13 @@ def read_data(filename, norm=True):
     if norm:
         temp = np.array(data).T
         temp = np.array([normalize(arr) for arr in temp]).T
-        data = [arr.tolist() for arr in temp]
+        new_data = [arr.tolist() for arr in temp]
         if gt_dict is not None:
             new_dict = {}
-            gt_dict_values = list(gt_dict.values())
-            for i, value in enumerate(data):
-                new_dict[tuple(value)] = gt_dict_values[i]
+            for i, value in enumerate(new_data):
+                new_dict[tuple(value)] = gt_dict[tuple(data[i])]
             gt_dict = new_dict.copy()
+        data = new_data
 
     data_type = None
     if len(data[0]) == 2:
