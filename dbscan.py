@@ -123,5 +123,5 @@ if __name__ == "__main__":
                     print(animal)
                 print()
         elif data_type is not None:
-            graph("DBSCAN at e=2 and # points=2", "", [groups[key] for key in groups.keys()], data_type)
+            graph("DBSCAN at e=2 and # points=2", [groups[key] for key in groups.keys()], data_type)
         find_cluster_sse(groups)

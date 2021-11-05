@@ -153,7 +153,7 @@ if __name__ == "__main__":
                     print(gt_dict[tuple(animal)])
                 print()
         elif data_type is not None:
-            graph('K-Means at k = 4', "out.png", centroid_points.values(), data_type)
+            graph('K-Means at k = 4', centroid_points.values(), data_type)
             if gt_dict is not None:
                 print_accuracy(centroid_points.values(), gt_dict)
         elif gt_dict is not None:
