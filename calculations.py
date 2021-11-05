@@ -2,7 +2,8 @@ import numpy as np
 from collections import Counter
 import matplotlib.pyplot as plt
 
-colors = ["red","green","blue","pink","black","orange","purple","beige","brown","gray","cyan","magenta"]
+colors = ["red", "green", "blue", "pink", "black", "orange", "purple", "beige", "brown", "gray", "cyan", "magenta", "lavender", "lime", "aquamarine", "tan", "silver", "cornsilk", "lightsalmon"]
+
 
 def manhattan_distance(p1, p2):
     dist = 0
@@ -34,6 +35,7 @@ def average_linking(p1, p2):
             dist += distance(x, y)
             # dist += manhattan_distance(x, y)
     return dist / (len(p1) * len(p2))
+
 
 def single_link(p1, p2):
     min_dist = None
@@ -97,7 +99,6 @@ def get_stats(centroid_dict):
         print(f'Average distance: {avg_distance}')
         print(f'SSE: {compute_SSE(dist, avg_distance)}\n')
         k += 1
-    pass
 
 
 def compute_SSE(point_distances, avg):
@@ -105,7 +106,6 @@ def compute_SSE(point_distances, avg):
     for p in point_distances:
         sse += pow((p - avg), 2)
     return sse
-
 
 
 def print_accuracy(centroid_points, gt_dict):
@@ -122,7 +122,7 @@ def print_accuracy(centroid_points, gt_dict):
         print("-" * 30 + "\n")
 
 
-def graph2D(title, filedest, points):
+def graph2D(title, points):
     for i, c in enumerate(points):
         x_coords = []
         y_coords = []
@@ -132,12 +132,11 @@ def graph2D(title, filedest, points):
         x_coords = np.asarray(x_coords)
         y_coords = np.asarray(y_coords)
         plt.scatter(x_coords, y_coords, color=colors[i % len(colors)], s=10)
-    # plt.show()
     plt.suptitle(title, fontsize=16)
-    plt.savefig(filedest)
+    plt.show()
 
 
-def graph3D(title, filedest, points):
+def graph3D(title, points):
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     for i, c in enumerate(points):
@@ -153,10 +152,30 @@ def graph3D(title, filedest, points):
         z_coords = np.asarray(z_coords)
         ax.scatter(x_coords, y_coords, z_coords, color=colors[i % len(colors)], s=20)
 
-
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
     plt.suptitle(title, fontsize=16)
-    plt.savefig(filedest)
+    plt.show()
+
+
+def graph(title, points, data_type):
+    if data_type == "2D":
+        graph2D(title, points)
+
+    if data_type == "3D":
+        graph3D(title, points)
+
+
+def find_cluster_sse(groups):
+    outliers = points = total_sse = 0
+    for key in groups.keys():
+        if len(groups[key]) == 1:
+            outliers += 1
+        else:
+            centroid = calc_centroid(groups[key])
+            total_sse += compute_SSE([np.array(l) for l in groups[key]], np.array(centroid)).sum()
+            points += len(groups[key])
+    # total_sse += outliers * 1.96 * total_sse / points
+    print("Total Cluster SSE: %.3f" % total_sse)

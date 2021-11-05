@@ -1,10 +1,6 @@
-from collections import Counter
-
-import numpy as np
-import parse
+from parse import read_data
 import sys
-from calculations import *
-
+from calculations import calc_centroid, distance, get_stats, graph, print_accuracy, find_cluster_sse
 
 
 def init_centroids(points, num_clusters):
@@ -51,10 +47,10 @@ def get_farthest_point(points, anchor):
     return max_point
 
 
-def k_means(points, num_clusters, condition, threshold):
+def k_means(points, num_clusters, condition, threshold, verbose=False):
     centroids = init_centroids(points, num_clusters)
     stop_condition = False
-    centroid_points = None
+    centroid_points = old_points = None
     while not stop_condition:
         # Re init centroid points for every iteration
         centroid_points = {centroid: [] for centroid in centroids}
@@ -66,11 +62,13 @@ def k_means(points, num_clusters, condition, threshold):
         # recompute centroids
         new_centroids = get_new_centroids(centroid_points)
         # get stoppage condition
-        stop_condition = calc_stop(centroids, new_centroids, condition, threshold)
+        stop_condition = calc_stop(centroids, new_centroids, centroid_points, old_points, condition, threshold)
         # Update centroids
         centroids = new_centroids
+        old_points = centroid_points.copy()
 
-    get_stats(centroid_points)
+    if verbose:
+        get_stats(centroid_points)
     return centroid_points
 
 
@@ -88,11 +86,25 @@ def get_new_centroids(centroid_points):
     return new_centroids
 
 
-def calc_stop(centroids, prev_centroids, condition, threshold):
+def calc_stop(prev_centroids, centroids, centroid_points, old_points, condition, threshold):
     # True = Stop condition has been met
     # False = Stop condition has not been met
     if condition == "points":
-        pass
+        if old_points is None:
+            return False
+        centroid_points_keys = list(centroid_points.keys())
+        old_points_keys = list(old_points.keys())
+        conflicts = 0
+        for i, key in enumerate(centroid_points_keys):
+            if len(centroid_points[key]) != len(old_points[old_points_keys[i]]):
+                return False
+            temp_1 = sorted(centroid_points[key], key=lambda x: x[0])
+            temp_2 = sorted(old_points[old_points_keys[i]], key=lambda x: x[0])
+            for j, point in enumerate(temp_1):
+                if point != temp_2[j]:
+                    conflicts += 1
+        if conflicts <= threshold:
+            return True
     elif condition == "centroids":
         dist = 0
         for i in range(len(centroids)):
@@ -101,7 +113,13 @@ def calc_stop(centroids, prev_centroids, condition, threshold):
         if dist < threshold:
             return True
     elif condition == "SSE":
-        pass
+        sse = old_sse = 0
+        for i in range(len(prev_centroids)):
+            for point in centroid_points[prev_centroids[i]]:
+                sse += distance(centroids[i], point)
+                old_sse += distance(prev_centroids[i], point)
+        if old_sse - sse < threshold:
+            return True
     return False
 
 
@@ -116,6 +134,7 @@ def best_centroid(centroids, point):
 
     return bestCentroid
 
+
 if __name__ == "__main__":
     if len(sys.argv) >= 3:
         method = "centroids"  # default method to centroids
@@ -123,17 +142,20 @@ if __name__ == "__main__":
             method = sys.argv[3]
         filename = sys.argv[1]
         k = int(sys.argv[2])
-        if filename == 'data/iris.csv' or filename == 'data/mammal_milk.csv':
-            data, gt_dict = parse.parseGTData(filename)
-        else:
-            data = parse.parseData(filename)
-            gt_dict = None
-        # data_norm = normalize(np.asarray(data, dtype=float))
-        centroid_points = k_means(data, k, method, 1)
-        if gt_dict is not None:
+        data, gt_dict, data_type = read_data(filename, norm=False)
+        centroid_points = k_means(data, k, method, 1, verbose="mammal_milk" not in filename)
+
+        if "mammal_milk" in filename:
+            for i, centroid in enumerate(centroid_points.keys()):
+                print("------------------------------------")
+                print("Cluster %d" % (i + 1))
+                for animal in centroid_points[centroid]:
+                    print(gt_dict[tuple(animal)])
+                print()
+        elif data_type is not None:
+            graph('K-Means at k = 4', centroid_points.values(), data_type)
+            if gt_dict is not None:
+                print_accuracy(centroid_points.values(), gt_dict)
+        elif gt_dict is not None:
             print_accuracy(centroid_points.values(), gt_dict)
-
-        # GRAPHING
-        # graph2D('K-Means at k = 4', "out.png", centroid_points.values())
-
-        graph3D('K-Means at k = 4', "out.png", centroid_points.values())
+        find_cluster_sse(centroid_points)
