@@ -169,8 +169,6 @@ def graph(title, points, data_type):
 
 
 def find_cluster_sse(groups):
-    for key in groups.keys():
-        print(groups[key])
     outliers = points = total_sse = 0
     for key in groups.keys():
         if len(groups[key]) == 1:
@@ -180,4 +178,4 @@ def find_cluster_sse(groups):
             total_sse += compute_SSE([np.array(l) for l in groups[key]], np.array(centroid)).sum()
             points += len(groups[key])
     # total_sse += outliers * 1.96 * total_sse / points
-    print("Total SSE: %.3f" % total_sse)
+    print("Total Cluster SSE: %.3f" % total_sse)
