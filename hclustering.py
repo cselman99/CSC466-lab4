@@ -137,5 +137,5 @@ if __name__ == "__main__":
             print_accuracy(final_clusters, gt_dict)
 
         if data_type is not None:
-            graph('H Clustering at t = 6.5', "out2D.png", final_clusters, data_type)
+            graph('H Clustering at t = 6.5', final_clusters, data_type)
         find_cluster_sse({i: final_clusters[i] for i in range(len(final_clusters))})
