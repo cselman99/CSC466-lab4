@@ -1,0 +1,73 @@
+<tree height = "27.851750393826237">
+	<node height = "12.87720854843937">
+		<node height = "5.961786644958043">
+			<node height = "2.7981422408448107">
+				<node height = "2.4089209202462416">
+					<node height = "1.2257650672131268">
+						<leaf height= "0" data ="90.1,2.6,1.0,6.9,0.35"/>
+						<node height = "0.9137286249209875">
+							<leaf height= "0" data ="90.3,1.7,1.4,6.2,0.4"/>
+							<leaf height= "0" data ="90.0,2.0,1.8,5.5,0.47"/>
+						</node>
+					</node>
+					<node height = "2.3475306174787165">
+						<node height = "1.2056533498481226">
+							<leaf height= "0" data ="88.5,1.4,3.5,6.0,0.24"/>
+							<leaf height= "0" data ="88.4,2.2,2.7,6.4,0.18"/>
+						</node>
+						<node height = "1.88679622641132">
+							<node height = "1.8000000000000014">
+								<node height = "1.5126466871017854">
+									<leaf height= "0" data ="87.7,3.5,3.4,4.8,0.71"/>
+									<leaf height= "0" data ="86.5,3.9,3.2,5.6,0.8"/>
+								</node>
+								<leaf height= "0" data ="86.9,4.8,1.7,5.7,0.9"/>
+							</node>
+							<leaf height= "0" data ="86.2,3.0,4.8,5.3,0.7"/>
+						</node>
+					</node>
+				</node>
+				<leaf height= "0" data ="90.4,0.6,4.5,4.4,0.1"/>
+			</node>
+			<node height = "3.3301651610693432">
+				<node height = "2.524381112272865">
+					<node height = "1.9490767044936965">
+						<node height = "1.5384732691860459">
+							<node height = "1.2043255373859696">
+								<leaf height= "0" data ="81.6,6.6,5.9,4.9,0.93"/>
+								<leaf height= "0" data ="82.0,5.6,6.4,4.7,0.91"/>
+							</node>
+							<leaf height= "0" data ="82.1,5.9,7.9,4.7,0.78"/>
+						</node>
+						<leaf height= "0" data ="82.8,7.1,5.1,3.7,1.1"/>
+					</node>
+					<leaf height= "0" data ="81.9,7.4,7.2,2.7,0.85"/>
+				</node>
+				<leaf height= "0" data ="81.6,10.1,6.3,4.4,0.75"/>
+			</node>
+		</node>
+		<node height = "8.81078884096083">
+			<node height = "8.09215051763127">
+				<node height = "4.918333050943172">
+					<node height = "3.7509998667022124">
+						<leaf height= "0" data ="71.3,12.3,13.1,1.9,2.3"/>
+						<leaf height= "0" data ="72.5,9.2,12.6,3.3,1.4"/>
+					</node>
+					<leaf height= "0" data ="76.3,9.3,9.5,3.0,1.2"/>
+				</node>
+				<leaf height= "0" data ="70.7,3.6,17.6,5.6,0.63"/>
+			</node>
+			<node height = "1.4430869689661803">
+				<node height = "1.2922847983320163">
+					<leaf height= "0" data ="65.9,10.4,19.7,2.6,1.4"/>
+					<leaf height= "0" data ="64.8,10.7,20.3,2.5,1.4"/>
+				</node>
+				<leaf height= "0" data ="64.8,11.1,21.2,1.6,0.85"/>
+			</node>
+		</node>
+	</node>
+	<node height = "7.374442351798543">
+		<leaf height= "0" data ="46.4,9.7,42.0,0.0,0.85"/>
+		<leaf height= "0" data ="44.9,10.6,34.9,0.9,0.53"/>
+	</node>
+</tree>

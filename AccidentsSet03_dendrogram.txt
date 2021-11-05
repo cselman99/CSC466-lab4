@@ -1,0 +1,85 @@
+<tree height = "5.0">
+	<node height = "2.449489742783178">
+		<node height = "2.23606797749979">
+			<node height = "2.0">
+				<node height = "1.0">
+					<node height = "1.0">
+						<node height = "1.0">
+							<node height = "1.0">
+								<node height = "1.0">
+									<leaf height= "0" data ="5.0,0.0,4.0,1.0,1.0"/>
+									<leaf height= "0" data ="5.0,0.0,4.0,1.0,0.0"/>
+								</node>
+								<leaf height= "0" data ="4.0,0.0,4.0,1.0,0.0"/>
+							</node>
+							<leaf height= "0" data ="3.0,0.0,4.0,1.0,0.0"/>
+						</node>
+						<leaf height= "0" data ="3.0,0.0,4.0,1.0,1.0"/>
+					</node>
+					<leaf height= "0" data ="3.0,0.0,4.0,1.0,2.0"/>
+				</node>
+				<node height = "1.0">
+					<node height = "1.0">
+						<node height = "1.0">
+							<node height = "1.0">
+								<node height = "1.0">
+									<node height = "1.0">
+										<node height = "1.0">
+											<node height = "1.0">
+												<node height = "1.0">
+													<node height = "1.0">
+														<node height = "1.0">
+															<node height = "1.0">
+																<node height = "1.0">
+																	<leaf height= "0" data ="3.0,0.0,2.0,1.0,0.0"/>
+																	<leaf height= "0" data ="2.0,0.0,2.0,1.0,0.0"/>
+																</node>
+																<leaf height= "0" data ="3.0,0.0,2.0,1.0,1.0"/>
+															</node>
+															<leaf height= "0" data ="4.0,0.0,2.0,1.0,0.0"/>
+														</node>
+														<leaf height= "0" data ="3.0,1.0,2.0,1.0,0.0"/>
+													</node>
+													<leaf height= "0" data ="3.0,1.0,2.0,1.0,1.0"/>
+												</node>
+												<leaf height= "0" data ="1.0,0.0,2.0,1.0,0.0"/>
+											</node>
+											<leaf height= "0" data ="1.0,0.0,2.0,1.0,1.0"/>
+										</node>
+										<leaf height= "0" data ="1.0,1.0,2.0,1.0,1.0"/>
+									</node>
+									<leaf height= "0" data ="2.0,1.0,2.0,1.0,1.0"/>
+								</node>
+								<leaf height= "0" data ="2.0,1.0,2.0,1.0,2.0"/>
+							</node>
+							<leaf height= "0" data ="1.0,0.0,2.0,2.0,1.0"/>
+						</node>
+						<leaf height= "0" data ="1.0,0.0,2.0,2.0,2.0"/>
+					</node>
+					<leaf height= "0" data ="1.0,1.0,2.0,1.0,0.0"/>
+				</node>
+			</node>
+			<node height = "1.4142135623730951">
+				<node height = "1.0">
+					<leaf height= "0" data ="1.0,0.0,4.0,2.0,0.0"/>
+					<leaf height= "0" data ="2.0,0.0,4.0,2.0,0.0"/>
+				</node>
+				<node height = "1.0">
+					<node height = "1.0">
+						<node height = "1.0">
+							<node height = "1.0">
+								<leaf height= "0" data ="1.0,0.0,4.0,1.0,1.0"/>
+								<leaf height= "0" data ="1.0,1.0,4.0,1.0,1.0"/>
+							</node>
+							<leaf height= "0" data ="1.0,1.0,4.0,1.0,0.0"/>
+						</node>
+						<leaf height= "0" data ="1.0,1.0,4.0,1.0,2.0"/>
+					</node>
+					<leaf height= "0" data ="1.0,2.0,4.0,1.0,2.0"/>
+				</node>
+			</node>
+		</node>
+		<leaf height= "0" data ="1.0,0.0,4.0,3.0,3.0"/>
+	</node>
+	<leaf height= "0" data ="10.0,0.0,4.0,1.0,1.0"/>
+</tree>
